@@ -206,4 +206,9 @@ For containerization with **Docker** or hosting on cloud platforms, refer to the
 
 ---
 
+## Application URL
+https://speaksense.streamlit.app/
+
+---
+
 *SpeakSense · Speech Emotion Recognition System*
