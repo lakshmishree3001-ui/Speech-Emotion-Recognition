@@ -1,0 +1,6 @@
+model,type,accuracy,f1_weighted
+LR (opt),ML,14.93,10.54
+RF (opt),ML,49.31,48.94
+SVM (opt),ML,13.19,3.08
+ANN (opt),DL,60.42,60.33
+Mel-CNN (M12),DL (Mel+Aug),58.89,53.08

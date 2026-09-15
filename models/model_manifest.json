@@ -1,0 +1,62 @@
+{
+  "ANN (Best)": {
+    "filename": "ann_model.keras",
+    "model_type": "Deep Learning (Dense ANN)",
+    "accuracy": 0.6285,
+    "f1_score": 0.6286,
+    "input_shape": "(264,)",
+    "scaler_required": true,
+    "size_bytes": 3817270,
+    "size_mb": 3.64,
+    "sha256": "d67ec0b3df891a061619b5390d8f6310129464b5992165b814d59117465aa21d",
+    "param_count": 312520
+  },
+  "ANN Optimized": {
+    "filename": "ann_optimized.keras",
+    "model_type": "Deep Learning (Tuned ANN)",
+    "accuracy": 0.6181,
+    "f1_score": 0.6172,
+    "input_shape": "(264,)",
+    "scaler_required": true,
+    "size_bytes": 3817657,
+    "size_mb": 3.64,
+    "sha256": "351a9147d9cdbf4dc04157e1234d7cd3f6c0b72f7903e33df42f0773b6d19cad",
+    "param_count": 312520
+  },
+  "Mel-CNN": {
+    "filename": "mel_cnn_best.keras",
+    "model_type": "Deep Learning (2D CNN on Spectrogram)",
+    "accuracy": 0.5891,
+    "f1_score": 0.5312,
+    "input_shape": "(128, 130, 1)",
+    "scaler_required": false,
+    "size_bytes": 7998743,
+    "size_mb": 7.63,
+    "sha256": "9a7312e78d29ea38b421e12e9efa4826645b7570ce41f3d0eb5c3908241d5e6d",
+    "param_count": 657800
+  },
+  "SVM Optimized": {
+    "filename": "svm_optimized.pkl",
+    "model_type": "Machine Learning (Pipeline with StandardScaler)",
+    "accuracy": 0.6215,
+    "f1_score": 0.6268,
+    "input_shape": "(264,)",
+    "scaler_required": false,
+    "size_bytes": 2360177,
+    "size_mb": 2.25,
+    "sha256": "b6fd39c6ec834e36456c1f630ccd4b7f7e687476f8fa7c35568f98bf8af5e381",
+    "param_count": null
+  },
+  "Random Forest": {
+    "filename": "rf_optimized.pkl",
+    "model_type": "Machine Learning (Ensemble)",
+    "accuracy": 0.4965,
+    "f1_score": 0.4914,
+    "input_shape": "(264,)",
+    "scaler_required": false,
+    "size_bytes": 27763945,
+    "size_mb": 26.48,
+    "sha256": "a9e7c907049de25e0c6d83e1959504eb8bb6b6bc12d3bc4bd340c022e5967f75",
+    "param_count": null
+  }
+}

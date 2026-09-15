@@ -1,0 +1,72 @@
+{
+  "project": "SpeakSense - Speech Emotion Recognition",
+  "version": "1.0.0",
+  "audio": {
+    "sample_rate": 22050,
+    "duration_sec": 3.0,
+    "target_samples": 66150,
+    "silence_top_db": 30,
+    "channels": 1,
+    "normalization": "peak",
+    "audio_formats_supported": [
+      "wav",
+      "mp3",
+      "ogg",
+      "flac",
+      "m4a"
+    ]
+  },
+  "feature_extraction": {
+    "feature_dim": 264,
+    "features": {
+      "mfcc": 40,
+      "mfcc_delta": 40,
+      "mfcc_delta2": 40,
+      "mel_spectrogram_mean": 128,
+      "chroma_stft_mean": 12,
+      "zcr_mean": 1,
+      "spectral_centroid_mean": 1,
+      "spectral_bandwidth_mean": 1,
+      "spectral_rolloff_mean": 1
+    },
+    "scaler_file": "models/scaler.pkl",
+    "label_encoder_file": "models/label_encoder.pkl"
+  },
+  "mel_spectrogram": {
+    "n_mels": 128,
+    "n_fft": 2048,
+    "hop_length": 512,
+    "fmax": 8000,
+    "time_frames": 130,
+    "tensor_shape": [
+      1,
+      128,
+      130,
+      1
+    ],
+    "config_file": "models/mel_cnn_config.json"
+  },
+  "emotions": {
+    "classes": [
+      "angry",
+      "calm",
+      "disgust",
+      "fearful",
+      "happy",
+      "neutral",
+      "sad",
+      "surprised"
+    ],
+    "num_classes": 8,
+    "mapping": {
+      "01": "neutral",
+      "02": "calm",
+      "03": "happy",
+      "04": "sad",
+      "05": "angry",
+      "06": "fearful",
+      "07": "disgust",
+      "08": "surprised"
+    }
+  }
+}

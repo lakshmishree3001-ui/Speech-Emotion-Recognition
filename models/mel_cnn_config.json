@@ -1,0 +1,34 @@
+{
+  "sr": 22050,
+  "duration": 3.0,
+  "n_mels": 128,
+  "n_fft": 2048,
+  "hop_length": 512,
+  "fmax": 8000,
+  "input_shape": [
+    128,
+    130,
+    1
+  ],
+  "emotions": [
+    "angry",
+    "calm",
+    "disgust",
+    "fearful",
+    "happy",
+    "neutral",
+    "sad",
+    "surprised"
+  ],
+  "n_classes": 8,
+  "emotion_to_idx": {
+    "angry": 0,
+    "calm": 1,
+    "disgust": 2,
+    "fearful": 3,
+    "happy": 4,
+    "neutral": 5,
+    "sad": 6,
+    "surprised": 7
+  }
+}

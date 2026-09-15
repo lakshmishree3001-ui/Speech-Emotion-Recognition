@@ -1,0 +1,9 @@
+file,true_emotion,svm_pred,ann_pred,cnn_pred,ensemble,ens_conf,correct
+03-01-01-01-01-01-01.wav,neutral,neutral,neutral,neutral,neutral,33.1,True
+03-01-02-01-01-01-01.wav,calm,happy,calm,calm,sad,26.8,False
+03-01-03-01-01-01-01.wav,happy,happy,happy,neutral,happy,41.0,True
+03-01-04-01-01-01-01.wav,sad,sad,sad,calm,sad,52.1,True
+03-01-05-01-01-01-01.wav,angry,angry,angry,angry,angry,70.3,True
+03-01-06-01-01-01-01.wav,fearful,fearful,fearful,disgust,fearful,43.0,True
+03-01-07-01-01-01-01.wav,disgust,disgust,disgust,disgust,disgust,66.9,True
+03-01-08-01-01-01-01.wav,surprised,happy,surprised,surprised,surprised,26.5,True

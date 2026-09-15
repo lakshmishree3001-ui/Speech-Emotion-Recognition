@@ -1,0 +1,6 @@
+Model,Macro_AUC
+Logistic Regression,0.8755
+Random Forest,0.5975
+SVM,0.9219
+ANN,0.9154
+CNN,0.851

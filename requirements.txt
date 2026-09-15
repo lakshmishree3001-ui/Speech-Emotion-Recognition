@@ -1,0 +1,31 @@
+# Speech Emotion Recognition — Runtime Requirements
+# Install with: pip install -r requirements.txt
+# Python >= 3.9 required
+
+# ── Core framework ────────────────────────────────────────────────────────────
+streamlit>=1.63.0
+
+# ── Audio processing ──────────────────────────────────────────────────────────
+librosa>=1.0.0
+soundfile>=0.12.1
+imageio-ffmpeg>=0.5.0
+
+# ── Machine learning ──────────────────────────────────────────────────────────
+scikit-learn>=1.4.0
+joblib>=1.3.0
+
+# ── Deep learning ─────────────────────────────────────────────────────────────
+tensorflow>=2.13.0
+
+# ── Data / numerics ──────────────────────────────────────────────────────────
+numpy>=1.24.0
+pandas>=2.0.0
+
+# ── Visualisation ────────────────────────────────────────────────────────────
+matplotlib>=3.7.0
+plotly>=5.18.0
+
+# ── Monitoring / Telemetry ───────────────────────────────────────────────────
+psutil>=5.9.0
+
+

@@ -1,0 +1,28 @@
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Large raw datasets (already processed into models and features)
+Data/Raw/
+
+# Git & IDEs
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Bytecode & Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+*.tmp
+*.wav
+*.mp3
+
+# Scratch / temporary scripts
+patch_nb*.py
+check_nb*.py
+scratch_*.py
+finish_nb12.py
