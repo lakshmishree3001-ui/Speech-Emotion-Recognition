@@ -1,7 +1,6 @@
 # 🎙️ SpeakSense — Speech Emotion Recognition System
 
-AI-powered speech emotion classification using Machine Learning and Deep Learning,
-trained on the **RAVDESS** dataset.
+An AI-powered Speech Emotion Recognition (SER) web application that detects human emotional states from spoken audio using Machine Learning and Deep Learning, trained on the **RAVDESS** dataset.
 
 ---
 
@@ -9,52 +8,54 @@ trained on the **RAVDESS** dataset.
 
 | Item | Detail |
 |------|--------|
-| **Domain** | Artificial Intelligence · Speech Processing |
-| **Dataset** | RAVDESS — 1 440 clips · 8 emotions · 24 actors |
-| **Emotions** | Neutral · Calm · Happy · Sad · Angry · Fearful · Disgust · Surprised |
-| **Primary Model** | ANN (`ann_model.keras`) — 62.9% accuracy |
-| **Interface** | Streamlit web application (`app/app.py`) |
+| **Domain** | Artificial Intelligence · Speech Processing · Affective Computing |
+| **Dataset** | RAVDESS — 1,440 speech audio clips · 8 emotions · 24 professional actors |
+| **Emotion Classes** | Neutral · Calm · Happy · Sad · Angry · Fearful · Disgust · Surprised |
+| **Acoustic Features** | 264-dimensional feature vector (MFCCs, Deltas, Mel-Filterbanks, Chroma, Spectral Scalars) |
+| **Primary Models** | SVM (Optimized), ANN, Mel-CNN, Random Forest |
+| **Application UI** | Streamlit interactive web application (`app/app.py`) |
 
 ---
 
 ## 🏆 Model Performance Summary
 
-| Model | Accuracy | F1 (weighted) | Type |
-|-------|----------|---------------|------|
-| **ANN (Best)** | **62.9%** | **62.9%** | Deep Learning |
-| ANN Optimized | 61.8% | 61.7% | Deep Learning |
-| SVM Optimized | 62.2% | 62.7% | Machine Learning (Pipeline) |
-| Mel-CNN | 58.9% | 53.1% | Deep Learning (Spectrogram) |
-| Random Forest | 49.7% | 49.1% | Machine Learning |
+| Model | Architecture / Paradigm | Accuracy | F1-Score (Weighted) | Optimal Use Case |
+|-------|-------------------------|----------|---------------------|------------------|
+| **SVM (Optimized)** | RBF Support Vector Classifier | **62.2%** | **62.7%** | Low-latency live microphone inference |
+| **ANN (Best)** | Deep Multilayer Perceptron | **62.9%** | **62.9%** | High-accuracy static audio evaluation |
+| **ANN (Optimized)** | Regularized Dense MLP | **61.8%** | **61.7%** | Noise-resilient neural classification |
+| **Mel-CNN** | 2D Spatial Convolutional Network | **58.9%** | **53.1%** | Formant & time-frequency pattern analysis |
+| **Random Forest** | 300-Estimator Ensemble | **49.7%** | **49.1%** | Benchmark baseline & interpretable trees |
 
 ---
 
-## 🔄 Inference Pipeline
+## 🔄 Acoustic Feature Extraction & Inference Pipeline
 
 ```
-Audio Input (WAV / MP3 / OGG / FLAC)
+Audio Input (Microphone / WAV / MP3 / OGG / FLAC)
     ↓
-Librosa load (sr=22 050 Hz, mono)
+Librosa Audio Loader (Sample rate = 22,050 Hz, Mono)
     ↓
-Trim silence (top_db=30)
+Audio Conditioning & Voice Activity Detection (VAD)
+  • Dynamic silence trimming (top_db thresholding)
+  • Peak normalization & 16-bit PCM amplification
+  • Standardized 3.0-second windowing (66,150 samples)
     ↓
-Peak normalise
+264-Dimensional Feature Extraction
+  • 40 MFCCs (Spectral envelope)
+  • 40 Delta MFCCs (Velocity rate)
+  • 40 Delta-Delta MFCCs (Acceleration)
+  • 128 Mel Filterbank Energies (Cochlear frequency bands)
+  • 12 Chroma Coefficients (Pitch class distribution)
+  • 4 Spectral Scalars (ZCR, Spectral Centroid, Bandwidth, Rolloff)
     ↓
-Pad / truncate → 3.0 seconds (66 150 samples)
+StandardScaler Transform (models/scaler.pkl)
     ↓
-Feature extraction  [264-dim vector]
-    MFCC (40) + MFCC-delta (40) + MFCC-delta² (40)
-    + Mel filterbank energies (128)
-    + Chroma (12)
-    + ZCR, Spectral Centroid, Bandwidth, Rolloff (4)
+Model Inference → Softmax / Decision Probabilities (8 classes)
     ↓
-StandardScaler transform (models/scaler.pkl)   ← ANN only
+Argmax → Predicted Emotion Label + Confidence Score (%)
     ↓
-Model inference → class probabilities (8 classes)
-    ↓
-Argmax → predicted emotion label
-    ↓
-Confidence score (%)
+Internal Telemetry Tracking (Latency profiling & performance auditing)
 ```
 
 ---
@@ -65,33 +66,34 @@ Confidence score (%)
 Speech Emotion Recognition/
 │
 ├── app/
-│   └── app.py                  ← Streamlit application (main entry point)
+│   └── app.py                  ← Streamlit multi-view application
 │
 ├── src/
 │   ├── __init__.py
-│   ├── audio_preprocessing.py  ← Audio loading & preprocessing
-│   ├── feature_extraction.py   ← 264-dim feature extractor
-│   └── predictor.py            ← Inference backend
+│   ├── audio_preprocessing.py  ← Audio loading, VAD & normalization
+│   ├── feature_extraction.py   ← 264-D acoustic feature extraction
+│   ├── monitoring.py           ← Thread-safe internal session telemetry & profiling
+│   └── predictor.py            ← Unified inference engine & model manager
 │
 ├── models/
-│   ├── ann_model.keras         ← Best ANN model (62.9% acc)
-│   ├── ann_optimized.keras     ← Optimized ANN
+│   ├── ann_model.keras         ← Deep Multilayer Perceptron
+│   ├── ann_optimized.keras     ← Regularized ANN
 │   ├── mel_cnn_best.keras      ← Mel-spectrogram CNN
-│   ├── mel_cnn_config.json     ← Mel-CNN configuration
-│   ├── svm_optimized.pkl       ← SVM Pipeline (with internal scaler)
-│   ├── rf_optimized.pkl        ← Random Forest
-│   ├── scaler.pkl              ← StandardScaler (for ANN)
-│   └── label_encoder.pkl       ← LabelEncoder (8 emotion classes)
-│
-├── Data/
-│   └── Raw/
-│       └── Audio_Speech_Actors_01-24/   ← RAVDESS dataset
+│   ├── mel_cnn_config.json     ← Mel-CNN architecture configuration
+│   ├── svm_optimized.pkl       ← RBF Support Vector Machine pipeline
+│   ├── rf_optimized.pkl        ← Random Forest ensemble
+│   ├── scaler.pkl              ← Feature StandardScaler
+│   ├── label_encoder.pkl       ← 8-class emotion LabelEncoder
+│   └── model_manifest.json     ← SHA-256 integrity hashes and metadata
 │
 ├── features/
-│   ├── features_dataset.csv    ← Pre-extracted feature matrix
+│   ├── features_dataset.csv    ← Pre-extracted 264-D feature matrix
 │   └── dataset_metadata.csv    ← Audio clip metadata
 │
-├── notebooks/                  ← Training & evaluation notebooks
+├── notebooks/                  ← End-to-end development & evaluation notebooks
+│   ├── 03_dataset_exploration.ipynb
+│   ├── 04_audio_preprocessing.ipynb
+│   ├── 05_exploratory_analysis.ipynb
 │   ├── 06_feature_extraction.ipynb
 │   ├── 07_ml_classification.ipynb
 │   ├── 08_deep_learning.ipynb
@@ -100,118 +102,108 @@ Speech Emotion Recognition/
 │   ├── 11_model_optimization.ipynb
 │   └── 12_advanced_audio_classification.ipynb
 │
-├── reports/                    ← Evaluation charts & CSVs
-├── requirements.txt
-├── .gitignore
-└── README.md
+├── reports/                    ← Evaluation dashboards, ROC curves & confusion matrices
+├── tests/                      ← Automated unit & integration tests
+│   ├── test_invalid_audio.py
+│   ├── test_realtime_prediction.py
+│   └── test_deployment.py
+│
+├── .streamlit/
+│   └── config.toml             ← UI theme, server config & upload limits
+│
+├── packages.txt                ← Linux system packages (libsndfile1, ffmpeg)
+├── requirements.txt            ← Pinned runtime dependencies
+├── Dockerfile                  ← Container configuration
+├── DEPLOYMENT.md               ← Deployment manual & Docker instructions
+└── README.md                   ← Project documentation
 ```
 
 ---
 
-## 🚀 Local Setup & Run
+## 🚀 Local Setup & Execution
 
 ### 1 — Prerequisites
 
-- Python 3.9 or higher
-- A virtual environment (recommended)
+- **Python 3.10, 3.11, or 3.12**
+- Git installed on your system
 
-### 2 — Create & activate virtual environment
+### 2 — Create & Activate Virtual Environment
 
 ```bash
+# Create virtual environment
 python -m venv venv
 
-# Windows
+# Windows (PowerShell / Command Prompt)
 venv\Scripts\activate
 
 # macOS / Linux
 source venv/bin/activate
 ```
 
-### 3 — Install dependencies
+### 3 — Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4 — Run the application
+### 4 — Run the Streamlit Application
 
 ```bash
 streamlit run app/app.py
 ```
 
-The app will open automatically at `http://localhost:8501`.
+The application will launch locally at **`http://localhost:8501`**.
 
 ---
 
-## 🌐 Production Deployment & Real-Time Monitoring (Module 14)
+## 🧭 Application Views
 
-SpeakSense is fully pre-configured and hardened for cloud deployment on **Streamlit Community Cloud** or **Docker / Containers**.
+The interface offers a streamlined experience organized into four primary views:
 
-For detailed, step-by-step instructions, see the complete [Deployment Manual](DEPLOYMENT.md).
+1. **Home**: High-level overview of the SpeakSense architecture, pipeline workflow, emotion taxonomy, and benchmark metrics.
+2. **Classify**: Interactive emotion classification workspace. Record live speech directly via microphone or upload an audio file (`.wav`, `.mp3`, `.ogg`, `.flac`) to inspect predicted emotions, confidence gauges, and acoustic parameters.
+3. **Dashboards**: Deep analytical telemetry including interactive time-domain waveforms, log-mel spectrograms, emotion probability distributions, and technical model comparison matrices.
+4. **About**: Scientific context covering the RAVDESS dataset, acoustic stack breakdown, feature extraction theory, and developer credits.
 
-### Quick Deployment Steps
-1. **Push to GitHub**: Initialize git, commit all files (ensuring `Data/Raw/` is excluded via `.gitignore`), and push to GitHub.
-2. **Deploy on Streamlit Cloud**: Go to [streamlit.io/cloud](https://streamlit.io/cloud), choose your repository, select `app/app.py` as the main entrypoint, and click **Deploy**.
-3. **Verify Deployment Health**: Open the **Monitoring** tab in the top navigation to verify model health status (`🟢 HEALTHY`), latency profiling, and manifest integrity.
-
-> **Deployment Assets Included:**
-> - `packages.txt` — Linux system dependencies (`libsndfile1`, `ffmpeg`).
-> - `.streamlit/config.toml` — Production server settings, CORS, and upload limits.
-> - `Dockerfile` & `.dockerignore` — Containerized deployment option.
-> - `models/model_manifest.json` — SHA-256 cryptographic hashes & model parameter specs.
-> - `src/monitoring.py` — In-memory session telemetry, latency profiling, and audit logging.
-> - `tests/` — Automated test suites for invalid audio handling, real-time prediction, and deployment readiness.
+> [!NOTE]
+> Performance monitoring, latency profiling, and system health checks run automatically and securely in the background via internal telemetry threads.
 
 ---
 
 ## 🧪 Automated Testing Suite
 
-Run the full automated test suite using Python:
+Run the automated test suite to verify audio preprocessing, model loading, and real-time prediction pipelines:
 
 ```bash
-# 1. Invalid audio handling & resilience tests
+# Run all unit tests
+python -m unittest discover -s tests -p "test_*.py" -v
+
+# Run individual test modules
 python -m unittest tests/test_invalid_audio.py -v
-
-# 2. Real-time audio prediction & latency benchmarks
 python -m unittest tests/test_realtime_prediction.py -v
-
-# 3. Deployment preflight readiness & manifest verification
 python tests/test_deployment.py
-
-# 4. Optional: Check live deployed endpoint
-python tests/test_deployment.py --url https://<your-app>.streamlit.app
 ```
 
 ---
 
-## 📦 Key Dependencies
+## 📦 Key Technologies
 
-| Package | Purpose |
-|---------|---------|
-| `streamlit` | Web application framework |
-| `librosa` | Audio loading & feature extraction |
-| `soundfile` | Audio I/O backend |
-| `scikit-learn` | ML models · StandardScaler · LabelEncoder |
-| `tensorflow` | Keras deep learning models |
-| `numpy` | Numerical computation |
-| `pandas` | Data handling |
-| `matplotlib` | Waveform & spectrogram visualisations |
-| `plotly` | Interactive dashboard & monitoring charts |
-| `psutil` | System resource & telemetry monitoring |
+| Technology | Purpose |
+|------------|---------|
+| `Streamlit` | Modern reactive web UI and client routing |
+| `Librosa` | Audio loading, silence trimming, mel-spectrograms, MFCC extraction |
+| `SoundFile` | Multi-format audio I/O backend |
+| `Scikit-Learn` | Classical machine learning (SVM, Random Forest), feature scaling |
+| `TensorFlow` / `Keras` | Deep neural network inference (ANN, Mel-CNN) |
+| `Plotly` | Interactive charts, probability radars, and audio visualization |
+| `NumPy` & `Pandas` | High-performance tensor manipulation and feature storage |
 
 ---
 
-## 👩‍💻 Usage
+## 📄 Deployment Guide
 
-1. Open the app in your browser (`http://localhost:8501`).
-2. Explore views from the top navigation bar:
-   - **Home**: System architecture, workflow, and model performance overview.
-   - **Classify**: Live speech emotion prediction via microphone recording, audio upload, or verified RAVDESS samples.
-   - **Dashboards**: Deep dive analytics, model comparison, feature correlations, and audio exploratory data.
-   - **Monitoring**: Live operational telemetry, latency timeline, model manifest checksums, and audit logs.
-   - **About**: Dataset details, emotion taxonomy, and technical citations.
+For containerization with **Docker** or hosting on cloud platforms, refer to the [Deployment Manual](DEPLOYMENT.md).
 
 ---
 
-*Module 14 · Model Deployment & Real-Time Monitoring · Speech Emotion Recognition System*
-
+*SpeakSense · Speech Emotion Recognition System*
